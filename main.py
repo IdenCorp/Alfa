@@ -2,9 +2,6 @@ import random, time
 
 class Rules:
     #родительский класс; тут я также собрал сообщение "главного меню" и проверки
-    beg = 1
-    end = 10
-    rand = random.randint(beg, end)
 
     def main_menu(self):
         #фиксированное сообщение "главного меню"; мне кажется, на текущий момент, так её зафиксировать удобнее
@@ -26,38 +23,47 @@ class Games(Rules):
     def game_1(self):
         #игра из первого задания - мы угадываем число программы
         print("Угадай целое число от 1 до 10")
+        rand = random.randint(1, 10)
         user = Rules.user_chose_lit(self)
-        while user != Rules.rand:
+        while user != rand:
             #пользователь вводит значения пока не угадает загаданное число
-            if user > Rules.rand:
+            if user > rand:
                 print("Твоё число больше загаданного. Попробуй ещё раз.")
-            elif user < Rules.rand:
+            elif user < rand:
                 print("Твоё число меньше загаданного. Попробуй ещё раз.")
             user = Rules.user_chose_lit(self)
         else:
             print("Ты угадал!")
-        print("Загаданное число: ", Rules.rand, "\n")
+        print("Загаданное число: ", rand, "\n")
         time.sleep(1) #здесь и далее я сделал задержки для красоты, чтобы разделить вывод информации
 
     def game_2(self):
         #игра из второго задания - программа угадывает наше число
+        beg = 1
+        end = 10
+        rand = random.randint(beg, end)
         print("Загадай целое число от 1 до 10. Даю тебе пару секунд на это.")
         time.sleep(2)
-        print("Ты загадал число ", Rules.rand)
+        print("Ты загадал число ", rand)
         user = input("Я угадал? ")
         #падает, если играть нечестно по отношению к программе; я не догадался, как сделать проверку, чтобы это не заваливалось в зацикливание или вылеты с ValueError
         #возможно, стоило подойти к этому вообще по другому, например, складывать граничные значения и делить на 2, а не сужать диапозон рандома
         while user != '=':
+            while True:
+                try:
                     if user == '>':
-                        Rules.beg = Rules.rand + 1
+                        beg = rand + 1
                     elif user == '<':
-                        Rules.end = Rules.rand - 1
-                    Rules.rand = random.randint(Rules.beg, Rules.end)
-                    print("Значит это ", Rules.rand)
+                        end = rand - 1
+                    rand = random.randint(beg, end)
+                    print("Значит это ", rand)
                     user = input("Я угадал? ")
+                except (ValueError):
+                    print("Ты меня обманываешь! Я так больше не играю.\n")
+                    break
         else:
             print("Какой я молодец!\n")
-            time.sleep(1)
+        time.sleep(1)
 
 #"интерфейс" программы - здесь нам выводятся опции "главного меню"
 print("Давай сыграем в одну из игр.")
